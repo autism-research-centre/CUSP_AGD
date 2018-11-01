@@ -1,0 +1,139 @@
+---
+title: "AGD_maternalrisk"
+author: "Varun Warrier"
+date: "29 October 2018"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+First, read the files and load the packages
+
+```{r packages + data}
+library(data.table)
+library(ggplot2)
+data1 = fread("C:/Users/Varun/Downloads/ASC%2cPCOS%2c HEAD dataset.txt", header = TRUE)
+```
+
+
+## Seperate the data
+
+```{r seperate data}
+PCOS_omit = subset(data1, PCOS == "0")
+PCOS_omit_males = subset(PCOS_omit, babys_gender == "1")
+PCOS_omit_females = subset(PCOS_omit, babys_gender == "2")
+
+males = subset(data1, babys_gender == "1")
+females = subset(data1, babys_gender == "2")
+
+
+control_m = subset(males, ASC == "0")
+control_f = subset(females, ASC == "0")
+
+control_all = subset(data1, ASC == "0")
+
+
+```
+
+
+
+
+## Analysis 1: ASC-control AGD analysis
+
+
+```{r ASC-control AGD analysis}
+
+# ASC-control agd linear regression with sex as a covariate
+summary(lm(agd_mean ~ as.factor(ASC) + as.factor(babys_gender) + centile_research + gestation_at_scan_research, data = PCOS_omit ))
+
+# ASC-control agd linear regression only in males
+summary(lm(agd_mean ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_males))
+
+# ASC-control agd linear regression only in females
+summary(lm(agd_mean ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_females))
+```
+
+## Analysis 2: PCOS-control AGD analysis
+
+```{R PCOS-control AGD analyiss}
+# PCOS-control agd linear regression only in control males
+summary(lm(agd_mean ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_m))
+
+# PCOS-control agd linear regression only in control females
+summary(lm(agd_mean ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_f))
+
+# PCOS-control agd linear regression only in all controls with sex as a covariate
+summary(lm(agd_mean ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research + as.factor(babys_gender), data = control_all))
+
+# Omnibus agd linear regression only in all controls with sex as a covariate
+summary(lm(agd_mean ~ as.factor(PCOS) +  as.factor(ASC) + centile_research + gestation_at_scan_research + as.factor(babys_gender), data = data1))
+```
+
+
+## Analysis 3: PCOS-control cerebellum analysis
+
+```{R PCOS-control cerebellum analysis}
+# PCOS-control cerebellum linear regression only in control males
+summary(lm(cerebellum ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_m))
+
+# PCOS-control cerebellum linear regression only in control females
+summary(lm(cerebellum ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_f))
+
+# PCOS-control cerebellum linear regression only in all controls with sex as a covariate
+summary(lm(cerebellum ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research + as.factor(babys_gender), data = control_all))
+
+```
+
+
+## Analysis 4: PCOS-control mid_cer_artery analysis
+
+```{R PCOS-control mid_cer_artery analysis}
+# PCOS-control cerebellum linear regression only in control males
+summary(lm(middle_cerebral_artery_research ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_m))
+
+# PCOS-control cerebellum linear regression only in control females
+summary(lm(middle_cerebral_artery_research ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research, data = control_f))
+
+# PCOS-control cerebellum linear regression only in all controls with sex as a covariate
+summary(lm(middle_cerebral_artery_research ~ as.factor(PCOS) +  centile_research + gestation_at_scan_research + as.factor(babys_gender), data = control_all))
+
+```
+
+
+
+## Analysis 5: ASC-control cerebellum analysis
+
+
+```{r ASC-control cerebellum analysis}
+
+# ASC-control agd linear regression with sex as a covariate
+summary(lm(cerebellum ~ as.factor(ASC) + as.factor(babys_gender) + centile_research + gestation_at_scan_research, data = PCOS_omit ))
+
+# ASC-control agd linear regression only in males
+summary(lm(cerebellum ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_males))
+
+# ASC-control agd linear regression only in females
+summary(lm(cerebellum ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_females))
+```
+
+
+## Analysis 6: ASC-control cerebral artery analysis
+
+
+```{r ASC-control cerebral artery analysis}
+
+# ASC-control agd linear regression with sex as a covariate
+summary(lm(middle_cerebral_artery_research ~ as.factor(ASC) + as.factor(babys_gender) + centile_research + gestation_at_scan_research, data = PCOS_omit ))
+
+# ASC-control agd linear regression only in males
+summary(lm(middle_cerebral_artery_research ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_males))
+
+# ASC-control agd linear regression only in females
+summary(lm(middle_cerebral_artery_research ~ as.factor(ASC) +  centile_research + gestation_at_scan_research, data = PCOS_omit_females))
+```
